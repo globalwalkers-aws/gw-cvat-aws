@@ -1,3 +1,5 @@
+# gw specific
+backup-logs/*.txt
 # Project Specific
 /data/
 /models/

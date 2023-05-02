@@ -32,7 +32,50 @@ do trainings and a dedicated support with 24 hour SLA.
 
 ## Quick start ⚡
 
-- [Installation guide](https://opencv.github.io/cvat/docs/administration/basics/installation/)
+### Additional features
+
+This forked cvat repo includes modified [docker-compose.yml](./docker-compose.yml) file and additional scripts to work with aws resources like S3.
+The additional features include-
+  - Mounting local volumes in cvat containers
+  - Periodically, compressing and backing up those data volumes to S3 bucket (with enabled versioning)
+  - Remove versions that are older than specific amount of time to save cost of storage
+
+### Setup
+  1. Please install first [docker](https://docs.docker.com/engine/install/) and [docker compose](https://docs.docker.com/compose/) in your system
+  2. Clone the repository and navigate to [gw-s3-backup-bash](./gw-s3-backup-bash/)
+  3. Make the bash files executable first by running
+  ```console
+    sudo chmod +x {BASH_FILE_NAME}
+  ```
+  4. Running cvat containers
+  - Please run the following command to attach a local directory for volumes with cvat containers for the first time and spin the containers up. In this step, you will have to define a new local directory that will be used to mount as root of volumes.
+    ```console
+    sudo ./cvat-init-run.sh
+    ```
+  - Please run the following command to re-attach a local directory that contains previous data, logs, keys and events with cvat containers and spin the containers up. In this step, you will have to define an existing local directory that will be used to mount as root of volumes.
+    ```console
+    sudo ./cvat-run.sh
+    ```
+  - Please run the following command to stop running containers.
+    ```console
+    sudo ./cvat-stop.sh
+    ```
+  5. Deploying backup cvat volumes to S3 process with cron job.
+  - First download access keys credentials to S3 in .csv format.
+  - Please run the following command to edit system crontab
+  ```console
+  sudo crontab -e
+  ```
+  - To schedule backup job at every midnight, please add the following command in crontab.
+  ```console
+  0 0 * * * {PATH_TO_REPO_ROOT}/gw-s3-backup-bash/backup_cvat_data_to_s3.sh {PATH_TO_ROOT_OF_VOLUMES} {PATH_TO_ACCESS_KEYS_CSV} > {PATH_TO_REPO_ROOT}/backup-logs/logs_`date '+\%d-\%m-\%Y-\%T'`.txt
+  ```
+  - To schedule the backup job to run once in every 5 minutes (for testing purpose), please add the following command in crontab.
+  ```console
+  */5 * * * * {PATH_TO_REPO_ROOT}/gw-s3-backup-bash/backup_cvat_data_to_s3.sh {PATH_TO_ROOT_OF_VOLUMES} {PATH_TO_ACCESS_KEYS_CSV} > {PATH_TO_REPO_ROOT}/backup-logs/logs_`date '+\%d-\%m-\%Y-\%T'`.txt
+  ```
+  - After running the commands, backup job will be run once in every specific period of time and save the compressed file as different object versions. The number of previous version kept are defined as 5 in the current configuration. That means, for daily backup job, only data from previous 5 days will be kept and any data that are older than 5 days are removed to save the cost of storage.
+
 - [Manual](https://opencv.github.io/cvat/docs/manual/)
 - [Contributing](https://opencv.github.io/cvat/docs/contributing/)
 - [Datumaro dataset framework](https://github.com/cvat-ai/datumaro/blob/develop/README.md)
