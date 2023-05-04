@@ -51,7 +51,10 @@ $aws_command configure set region $aws_region
 
 # zip cvat volume for backup
 out_zip_path=$aws_tmp_dir/$cvat_zip_name
-zip -r $out_zip_path  $cvat_volume
+cwd=$(pwd)
+cd $cvat_volume
+zip -r $out_zip_path  *
+cd $cwd
 $aws_command s3 cp $out_zip_path s3://$bucket_name/$zip_name
 
 echo "Getting list of object versions.."

@@ -4,20 +4,6 @@
 
 
 services:
- cvat_db:
-   container_name: cvat_db
-   image: postgres:15-alpine
-   restart: always
-   environment:
-     POSTGRES_USER: root
-     POSTGRES_DB: cvat
-     POSTGRES_HOST_AUTH_METHOD: trust
-   volumes:
-     - cvat_db:/var/lib/postgresql/data
-   networks:
-     - cvat
-
-
  cvat_redis:
    container_name: cvat_redis
    image: redis:7.0-alpine
@@ -32,13 +18,16 @@ services:
    restart: always
    depends_on:
      - cvat_redis
-     - cvat_db
      - cvat_opa
    environment:
      DJANGO_MODWSGI_EXTRA_ARGS: ''
      ALLOWED_HOSTS: '*'
      CVAT_REDIS_HOST: 'cvat_redis'
-     CVAT_POSTGRES_HOST: 'cvat_db'
+     CVAT_POSTGRES_HOST: ${DB_ENDPOINT:-}
+     CVAT_POSTGRES_DBNAME: ${DB_NAME:-}
+     CVAT_POSTGRES_USER: ${DB_USER_NAME:-gw_mm}
+     CVAT_POSTGRES_PASSWORD: ${DB_PWD:-12345}
+     CVAT_POSTGRES_PORT: ${DB_PORT:-5432}
      ADAPTIVE_AUTO_ANNOTATION: 'false'
      IAM_OPA_BUNDLE: '1'
      no_proxy: clickhouse,grafana,vector,nuclio,opa,${no_proxy:-}
@@ -70,12 +59,15 @@ services:
    restart: always
    depends_on:
      - cvat_redis
-     - cvat_db
      - cvat_opa
    environment:
      CVAT_REDIS_HOST: 'cvat_redis'
      CVAT_REDIS_PASSWORD: ''
-     CVAT_POSTGRES_HOST: 'cvat_db'
+     CVAT_POSTGRES_HOST: ${DB_ENDPOINT:-}
+     CVAT_POSTGRES_DBNAME: ${DB_NAME:-}
+     CVAT_POSTGRES_USER: ${DB_USER_NAME:-gw_mm}
+     CVAT_POSTGRES_PASSWORD: ${DB_PWD:-12345}
+     CVAT_POSTGRES_PORT: ${DB_PORT:-5432}
      CLICKHOUSE_HOST: clickhouse
      DJANGO_LOG_SERVER_HOST: vector
      DJANGO_LOG_SERVER_PORT: 80
@@ -95,10 +87,13 @@ services:
    restart: always
    depends_on:
      - cvat_redis
-     - cvat_db
    environment:
      CVAT_REDIS_HOST: 'cvat_redis'
-     CVAT_POSTGRES_HOST: 'cvat_db'
+     CVAT_POSTGRES_HOST: ${DB_ENDPOINT:-}
+     CVAT_POSTGRES_DBNAME: ${DB_NAME:-}
+     CVAT_POSTGRES_USER: ${DB_USER_NAME:-gw_mm}
+     CVAT_POSTGRES_PASSWORD: ${DB_PWD:-12345}
+     CVAT_POSTGRES_PORT: ${DB_PORT:-5432}
      DJANGO_LOG_SERVER_HOST: vector
      DJANGO_LOG_SERVER_PORT: 80
      no_proxy: clickhouse,grafana,vector,nuclio,opa,${no_proxy:-}
@@ -118,10 +113,13 @@ services:
    restart: always
    depends_on:
      - cvat_redis
-     - cvat_db
    environment:
      CVAT_REDIS_HOST: 'cvat_redis'
-     CVAT_POSTGRES_HOST: 'cvat_db'
+     CVAT_POSTGRES_HOST: ${DB_ENDPOINT:-}
+     CVAT_POSTGRES_DBNAME: ${DB_NAME:-}
+     CVAT_POSTGRES_USER: ${DB_USER_NAME:-gw_mm}
+     CVAT_POSTGRES_PASSWORD: ${DB_PWD:-12345}
+     CVAT_POSTGRES_PORT: ${DB_PORT:-5432}
      CLICKHOUSE_HOST: clickhouse
      DJANGO_LOG_SERVER_HOST: vector
      DJANGO_LOG_SERVER_PORT: 80
@@ -142,11 +140,14 @@ services:
    restart: always
    depends_on:
      - cvat_redis
-     - cvat_db
      - cvat_opa
    environment:
      CVAT_REDIS_HOST: 'cvat_redis'
-     CVAT_POSTGRES_HOST: 'cvat_db'
+     CVAT_POSTGRES_HOST: ${DB_ENDPOINT:-}
+     CVAT_POSTGRES_DBNAME: ${DB_NAME:-}
+     CVAT_POSTGRES_USER: ${DB_USER_NAME:-gw_mm}
+     CVAT_POSTGRES_PASSWORD: ${DB_PWD:-12345}
+     CVAT_POSTGRES_PORT: ${DB_PORT:-5432}
      DJANGO_LOG_SERVER_HOST: vector
      DJANGO_LOG_SERVER_PORT: 80
      no_proxy: clickhouse,grafana,vector,nuclio,opa,${no_proxy:-}
@@ -166,11 +167,14 @@ services:
    restart: always
    depends_on:
      - cvat_redis
-     - cvat_db
      - cvat_opa
    environment:
      CVAT_REDIS_HOST: 'cvat_redis'
-     CVAT_POSTGRES_HOST: 'cvat_db'
+     CVAT_POSTGRES_HOST: ${DB_ENDPOINT:-}
+     CVAT_POSTGRES_DBNAME: ${DB_NAME:-}
+     CVAT_POSTGRES_USER: ${DB_USER_NAME:-gw_mm}
+     CVAT_POSTGRES_PASSWORD: ${DB_PWD:-12345}
+     CVAT_POSTGRES_PORT: ${DB_PORT:-5432}
      DJANGO_LOG_SERVER_HOST: vector
      DJANGO_LOG_SERVER_PORT: 80
      no_proxy: clickhouse,grafana,vector,nuclio,opa,${no_proxy:-}
@@ -340,12 +344,6 @@ services:
 
 
 volumes:
- cvat_db:
-   driver: local
-   driver_opts:
-     type: none
-     o: bind
-     device: $CVAT_DB_VOLUME
  cvat_data:
    driver: local
    driver_opts:

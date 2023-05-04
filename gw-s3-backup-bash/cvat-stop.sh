@@ -19,3 +19,5 @@ CVAT_KEYS_VOLUME=$cvat_keys_volume \
 CVAT_LOGS_VOLUME=$cvat_logs_volume \
 CVAT_EVENTS_VOLUME=$cvat_events_volume \
 docker compose down
+# remove docker volumes
+docker volume rm $(docker volume ls -q)

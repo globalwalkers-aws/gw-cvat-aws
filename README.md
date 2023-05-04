@@ -34,10 +34,11 @@ do trainings and a dedicated support with 24 hour SLA.
 
 ### Additional features
 
-This forked cvat repo includes modified [docker-compose.yml](./docker-compose.yml) file and additional scripts to work with aws resources like S3.
+This forked cvat repo includes modified [docker-compose.yml](./docker-compose.yml) file and additional scripts to work with aws resources like S3 and RDS postgres database.
 The additional features include-
   - Mounting local volumes in cvat containers
   - Periodically, compressing and backing up those data volumes to S3 bucket (with enabled versioning)
+  - Removing existing cvat_db container and replacing it with RDS postgres db instance with periodical backup.
   - Remove versions that are older than specific amount of time to save cost of storage
 
 ### Setup
@@ -48,11 +49,11 @@ The additional features include-
     sudo chmod +x {BASH_FILE_NAME}
   ```
   4. Running cvat containers
-  - Please run the following command to attach a local directory for volumes with cvat containers for the first time and spin the containers up. In this step, you will have to define a new local directory that will be used to mount as root of volumes.
+  - Please run the following command to attach a local directory for volumes with cvat containers for the first time and spin the containers up. In this step, you will have to define a new local directory that will be used to mount as root of volumes as well as database credentials to initiate connection to RDS postgres db instance.
     ```console
     sudo ./cvat-init-run.sh
     ```
-  - Please run the following command to re-attach a local directory that contains previous data, logs, keys and events with cvat containers and spin the containers up. In this step, you will have to define an existing local directory that will be used to mount as root of volumes.
+  - Please run the following command to re-attach a local directory that contains previous data, logs, keys and events with cvat containers and spin the containers up. In this step, you will have to define an existing local directory that will be used to mount as root of volumes as well as database credentials to initiate connection to RDS postgres db instance.
     ```console
     sudo ./cvat-run.sh
     ```
