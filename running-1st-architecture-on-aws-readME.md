@@ -13,7 +13,7 @@ cd /gw-cvat/gw-cvat-aws
 ```
 - Export CVAT_HOST env variable as your EC2 instance Public IPv4 address by
 ```bash
-export CVAT_HOST=[Your Public IPv4 address]
+export CVAT_HOST=[EC2's Public IPv4 address]
 ```
 ### How to start CVAT
 - Navigate to **gw-backup-bash** directory
