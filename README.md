@@ -30,7 +30,8 @@ do trainings and a dedicated support with 24 hour SLA.
 
 ![CVAT screencast](site/content/en/images/cvat-ai-screencast.gif)
 
-## Quick start ⚡
+
+## GW Modification
 
 ### Additional features
 
@@ -43,7 +44,7 @@ The additional features include-
 
 ### Setup
   1. Please install first [docker](https://docs.docker.com/engine/install/) and [docker compose](https://docs.docker.com/compose/) in your system
-  2. Clone the repository and navigate to [gw-s3-backup-bash](./gw-s3-backup-bash/)
+  2. Clone the repository and navigate to [gw-backup-bash](./gw-backup-bash/)
   3. Make the bash files executable first by running
   ```console
     sudo chmod +x {BASH_FILE_NAME}
@@ -69,13 +70,20 @@ The additional features include-
   ```
   - To schedule backup job at every midnight, please add the following command in crontab.
   ```console
-  0 0 * * * {PATH_TO_REPO_ROOT}/gw-s3-backup-bash/backup_cvat_data_to_s3.sh {PATH_TO_ROOT_OF_VOLUMES} {PATH_TO_ACCESS_KEYS_CSV} > {PATH_TO_REPO_ROOT}/backup-logs/logs_`date '+\%d-\%m-\%Y-\%T'`.txt
+  0 0 * * * {PATH_TO_REPO_ROOT}/gw-backup-bash/backup_cvat_data_to_s3.sh {PATH_TO_ROOT_OF_VOLUMES} {PATH_TO_ACCESS_KEYS_CSV} > {PATH_TO_REPO_ROOT}/backup-logs/logs_`date '+\%d-\%m-\%Y-\%T'`.txt
   ```
   - To schedule the backup job to run once in every 5 minutes (for testing purpose), please add the following command in crontab.
   ```console
-  */5 * * * * {PATH_TO_REPO_ROOT}/gw-s3-backup-bash/backup_cvat_data_to_s3.sh {PATH_TO_ROOT_OF_VOLUMES} {PATH_TO_ACCESS_KEYS_CSV} > {PATH_TO_REPO_ROOT}/backup-logs/logs_`date '+\%d-\%m-\%Y-\%T'`.txt
+  */5 * * * * {PATH_TO_REPO_ROOT}/gw-backup-bash/backup_cvat_data_to_s3.sh {PATH_TO_ROOT_OF_VOLUMES} {PATH_TO_ACCESS_KEYS_CSV} > {PATH_TO_REPO_ROOT}/backup-logs/logs_`date '+\%d-\%m-\%Y-\%T'`.txt
   ```
   - After running the commands, backup job will be run once in every specific period of time and save the compressed file as different object versions. The number of previous version kept are defined as 5 in the current configuration. That means, for daily backup job, only data from previous 5 days will be kept and any data that are older than 5 days are removed to save the cost of storage.
+
+### Running CVAT 1st architecture on AWS
+  - Please refer to [Running CVAT 1st architecutre on AWS](./running-1st-architecture-on-aws-readME.md)
+
+### ------------------------------------- End of GW Modification -------------------------------------
+
+## Quick start ⚡
 
 - [Manual](https://opencv.github.io/cvat/docs/manual/)
 - [Contributing](https://opencv.github.io/cvat/docs/contributing/)
